@@ -16,10 +16,12 @@ export async function generateStaticParams() {
 }
 
 // 動的メタデータの生成
-export async function generateMetadata(props: {
-    params: Promise<{ categoryId: string }>;
+export async function generateMetadata({
+    params,
+}: {
+    params: { categoryId: string };
 }): Promise<Metadata> {
-    const { categoryId } = await props.params;
+    const { categoryId } = params;
 
     try {
         const category = await getCategoryById(categoryId);
@@ -40,15 +42,13 @@ export async function generateMetadata(props: {
 const PER_PAGE = 12;
 
 interface PageProps {
-    params: Promise<{ categoryId: string }>;
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+    params: { categoryId: string };
+    searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function CategoryPage(props: PageProps) {
+export default async function CategoryPage({ params, searchParams }: PageProps) {
     try {
-        const { categoryId } = await props.params;
-        const searchParams = await props.searchParams;
-
+        const { categoryId } = params;
         const pageParam = searchParams.page as string | undefined;
         const currentPage = pageParam ? parseInt(pageParam) : 1;
 
@@ -102,6 +102,7 @@ export default async function CategoryPage(props: PageProps) {
             </div>
         );
     } catch (error) {
+        console.error('カテゴリー詳細ページでエラーが発生しました:', error);
         notFound();
     }
 }

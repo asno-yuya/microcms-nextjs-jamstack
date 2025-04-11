@@ -12,16 +12,14 @@ export const metadata: Metadata = {
 // 1ページあたりの記事数
 const PER_PAGE = 12;
 
-// 型定義
+// 型定義（Promise を使わない）
 interface PageProps {
-    params: { [key: string]: string | string[] };
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>; // Promise を明示
+    searchParams?: { [key: string]: string | string[] };
 }
 
 export default async function BlogPage({ searchParams }: PageProps) {
-    // searchParams を await で解決
-    const resolvedSearchParams = await searchParams;
-    const pageParam = resolvedSearchParams.page as string | undefined;
+    // 現在のページ番号を取得（デフォルトは1）
+    const pageParam = searchParams?.page as string | undefined;
     const currentPage = pageParam ? parseInt(pageParam) : 1;
 
     // 記事データの取得

@@ -18,11 +18,12 @@ export async function generateStaticParams() {
 }
 
 // 動的メタデータの生成
-export async function generateMetadata({
-    params,
-}: {
-    params: { id: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+    props: {
+        params: Promise<{ id: string }>;
+    }
+): Promise<Metadata> {
+    const params = await props.params;
     try {
         const { id } = params;
         const blog = await getBlogById(id);
@@ -45,11 +46,12 @@ export async function generateMetadata({
 }
 
 interface PageProps {
-    params: { id: string };
-    searchParams: { [key: string]: string | string[] | undefined };
+    params: Promise<{ id: string }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function BlogDetailPage({ params }: PageProps) {
+export default async function BlogDetailPage(props: PageProps) {
+    const params = await props.params;
     const { id } = params;
     try {
         const blog = await getBlogById(id);

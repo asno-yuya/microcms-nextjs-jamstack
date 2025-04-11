@@ -14,10 +14,11 @@ const PER_PAGE = 12;
 
 // 型定義（Promise を使わない）
 interface PageProps {
-    searchParams?: { [key: string]: string | string[] };
+    searchParams?: Promise<{ [key: string]: string | string[] }>;
 }
 
-export default async function BlogPage({ searchParams }: PageProps) {
+export default async function BlogPage(props: PageProps) {
+    const searchParams = await props.searchParams;
     // 現在のページ番号を取得（デフォルトは1）
     const pageParam = searchParams?.page as string | undefined;
     const currentPage = pageParam ? parseInt(pageParam) : 1;

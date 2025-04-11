@@ -16,11 +16,12 @@ export async function generateStaticParams() {
 }
 
 // 動的メタデータの生成
-export async function generateMetadata({
-    params,
-}: {
-    params: { categoryId: string };
-}): Promise<Metadata> {
+export async function generateMetadata(
+    props: {
+        params: Promise<{ categoryId: string }>;
+    }
+): Promise<Metadata> {
+    const params = await props.params;
     const { categoryId } = params;
 
     try {
@@ -42,11 +43,13 @@ export async function generateMetadata({
 const PER_PAGE = 12;
 
 interface PageProps {
-    params: { categoryId: string };
-    searchParams: { [key: string]: string | string[] | undefined };
+    params: Promise<{ categoryId: string }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function CategoryPage({ params, searchParams }: PageProps) {
+export default async function CategoryPage(props: PageProps) {
+    const searchParams = await props.searchParams;
+    const params = await props.params;
     try {
         const { categoryId } = params;
         const pageParam = searchParams.page as string | undefined;

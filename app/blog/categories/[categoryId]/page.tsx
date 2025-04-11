@@ -19,11 +19,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
     params,
 }: {
-    params: Promise<{ categoryId: string }>;
+    params: { categoryId: string };
 }): Promise<Metadata> {
-
-    const resolvedParams = await params;
-    const categoryId = resolvedParams.categoryId;
+    const categoryId = params.categoryId;
 
     try {
         const category = await getCategoryById(categoryId);
@@ -43,24 +41,19 @@ export async function generateMetadata({
 // 1ページあたりの記事数
 const PER_PAGE = 12;
 
-type PageProps = {
-    params: Promise<{ categoryId: string }>;
-    searchParams: Promise<{
-        page?: string;
-    }>;
-};
+// Next.js 15.3.0での新しいPageProps型定義
+interface PageProps {
+    params: { categoryId: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+}
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {
     try {
-        // params を await する
-        const resolvedParams = await params;
-        const categoryId = resolvedParams.categoryId;
-
-        // searchParams も await する
-        const resolvedSearchParams = await searchParams;
+        const categoryId = params.categoryId;
 
         // 現在のページ番号を取得（デフォルトは1）
-        const currentPage = resolvedSearchParams.page ? parseInt(resolvedSearchParams.page) : 1;
+        const pageParam = searchParams.page as string | undefined;
+        const currentPage = pageParam ? parseInt(pageParam) : 1;
 
         // カテゴリー情報の取得
         const category = await getCategoryById(categoryId);

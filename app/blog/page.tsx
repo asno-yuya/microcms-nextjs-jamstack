@@ -12,15 +12,16 @@ export const metadata: Metadata = {
 // 1ページあたりの記事数
 const PER_PAGE = 12;
 
-type PageProps = {
-    searchParams: {
-        page?: string;
-    };
-};
+// Next.js 15.3.0での新しいPageProps型定義
+interface PageProps {
+    params: { [key: string]: string | string[] };
+    searchParams: { [key: string]: string | string[] | undefined };
+}
 
 export default async function BlogPage({ searchParams }: PageProps) {
     // 現在のページ番号を取得（デフォルトは1）
-    const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
+    const pageParam = searchParams.page as string | undefined;
+    const currentPage = pageParam ? parseInt(pageParam) : 1;
 
     // 記事データの取得
     const blogsData = await getBlogs({

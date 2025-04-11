@@ -21,13 +21,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
     params,
 }: {
-    params: Promise<{ id: string }>;
+    params: { id: string };
 }): Promise<Metadata> {
-    // params を await する
-    const resolvedParams = await params;
-
     try {
-        const blog = await getBlogById(resolvedParams.id);
+        const blog = await getBlogById(params.id);
 
         return {
             title: `${blog.title} | My Blog`,
@@ -46,16 +43,14 @@ export async function generateMetadata({
     }
 }
 
-export default async function BlogDetailPage({
-    params,
-}: {
-    params: Promise<{ id: string }>;
-}) {
-    // params を await する
-    const resolvedParams = await params;
+interface PageProps {
+    params: { id: string };
+    searchParams: { [key: string]: string | string[] | undefined };
+}
 
+export default async function BlogDetailPage({ params }: PageProps) {
     try {
-        const blog = await getBlogById(resolvedParams.id);
+        const blog = await getBlogById(params.id);
         const toc = extractTableOfContents(blog.content);
 
         // microCMSの画像のURLは幅と高さを指定できます

@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 
 // 動的メタデータの生成
 export async function generateMetadata(props: {
-    params: { categoryId: string };
+    params: Promise<{ categoryId: string }>;
 }): Promise<Metadata> {
     const { categoryId } = await props.params;
 
@@ -40,8 +40,8 @@ export async function generateMetadata(props: {
 const PER_PAGE = 12;
 
 interface PageProps {
-    params: { categoryId: string };
-    searchParams: { [key: string]: string | string[] | undefined };
+    params: Promise<{ categoryId: string }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function CategoryPage(props: PageProps) {

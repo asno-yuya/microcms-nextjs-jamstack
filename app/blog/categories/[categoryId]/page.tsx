@@ -19,7 +19,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
     params,
 }: {
-    params: { categoryId: string };
+    params: Promise<{ categoryId: string }>;
 }): Promise<Metadata> {
 
     const resolvedParams = await params;
@@ -44,10 +44,10 @@ export async function generateMetadata({
 const PER_PAGE = 12;
 
 type PageProps = {
-    params: { categoryId: string };
-    searchParams: {
+    params: Promise<{ categoryId: string }>;
+    searchParams: Promise<{
         page?: string;
-    };
+    }>;
 };
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {

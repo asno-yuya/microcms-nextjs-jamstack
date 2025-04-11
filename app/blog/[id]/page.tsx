@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }): Promise<Metadata> {
     // params を await する
     const resolvedParams = await params;
@@ -49,7 +49,7 @@ export async function generateMetadata({
 export default async function BlogDetailPage({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
     // params を await する
     const resolvedParams = await params;

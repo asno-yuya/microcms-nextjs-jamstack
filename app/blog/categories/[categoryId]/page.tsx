@@ -16,12 +16,10 @@ export async function generateStaticParams() {
 }
 
 // 動的メタデータの生成
-export async function generateMetadata({
-    params,
-}: {
+export async function generateMetadata(props: {
     params: { categoryId: string };
 }): Promise<Metadata> {
-    const categoryId = params.categoryId;
+    const { categoryId } = await props.params;
 
     try {
         const category = await getCategoryById(categoryId);
@@ -41,29 +39,26 @@ export async function generateMetadata({
 // 1ページあたりの記事数
 const PER_PAGE = 12;
 
-// Next.js 15.3.0での新しいPageProps型定義
 interface PageProps {
     params: { categoryId: string };
     searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function CategoryPage({ params, searchParams }: PageProps) {
+export default async function CategoryPage(props: PageProps) {
     try {
-        const categoryId = params.categoryId;
+        const { categoryId } = await props.params;
+        const searchParams = await props.searchParams;
 
-        // 現在のページ番号を取得（デフォルトは1）
         const pageParam = searchParams.page as string | undefined;
         const currentPage = pageParam ? parseInt(pageParam) : 1;
 
-        // カテゴリー情報の取得
         const category = await getCategoryById(categoryId);
-        // カテゴリーに紐づく記事の取得
+
         const blogsData = await getBlogsByCategory(category.id, {
             limit: PER_PAGE,
             offset: (currentPage - 1) * PER_PAGE,
         });
 
-        // 他のカテゴリー情報の取得（サイドバー用）
         const categoriesData = await getCategories();
 
         return (
@@ -90,7 +85,6 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
                     {/* サイドバー */}
                     <aside className="w-full lg:w-1/4 space-y-8">
-                        {/* カテゴリーリスト */}
                         <div className="bg-white p-6 rounded-lg shadow-sm">
                             <h2 className="text-xl text-black font-bold mb-4">カテゴリー</h2>
                             <div className="flex flex-wrap gap-2">

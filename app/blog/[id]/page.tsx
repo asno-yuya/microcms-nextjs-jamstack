@@ -24,7 +24,8 @@ export async function generateMetadata({
     params: { id: string };
 }): Promise<Metadata> {
     try {
-        const blog = await getBlogById(params.id);
+        const { id } = params;
+        const blog = await getBlogById(id);
 
         return {
             title: `${blog.title} | My Blog`,
@@ -50,7 +51,8 @@ interface PageProps {
 
 export default async function BlogDetailPage({ params }: PageProps) {
     try {
-        const blog = await getBlogById(params.id);
+        const { id } = params;
+        const blog = await getBlogById(id);
         const toc = extractTableOfContents(blog.content);
 
         // microCMSの画像のURLは幅と高さを指定できます

@@ -42,6 +42,6 @@ export type SearchParams = {
     filters?: string;
     orders?: string;
     fields?: string;
-    depth?: number;
+    // depth?: depthNumber;  // depthNumber 型に変更
     richEditorFormat?: 'html' | 'object';
 };
